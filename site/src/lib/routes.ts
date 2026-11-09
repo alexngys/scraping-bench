@@ -1,4 +1,4 @@
-import { ALTERNATIVES_PATH } from "@/lib/alternatives";
+import { ALTERNATIVES_PATH, JINA_ALTERNATIVES_PATH } from "@/lib/alternatives";
 import { comparisons, providers, tracks } from "@/lib/catalog";
 import { COST_PATH } from "@/lib/cost";
 import { NOISE_PATH } from "@/lib/site";
@@ -13,6 +13,7 @@ export const indexablePaths: readonly string[] = [
   "/compare",
   ...comparisons.map((c) => `/compare/${c.slug}`),
   ALTERNATIVES_PATH,
+  JINA_ALTERNATIVES_PATH,
   "/methodology",
   COST_PATH,
   NOISE_PATH,
@@ -50,7 +51,7 @@ export const COPY_CHANGED: Partial<Record<string, string>> = {
   "/providers/spider": "2026-10-31",
   [NOISE_PATH]: "2026-11-01",
   "/compare/firecrawl-vs-tinyfish": "2026-11-01",
-  "/providers/jina": "2026-11-02",
+  "/providers/jina": "2026-11-09",
   "/compare/firecrawl-vs-jina": "2026-11-02",
   "/compare/context-dev-vs-jina": "2026-11-02",
   "/compare/jina-vs-scrapfly": "2026-11-02",
@@ -59,4 +60,7 @@ export const COPY_CHANGED: Partial<Record<string, string>> = {
   "/providers/string": "2026-11-05",
   "/providers/scrapfly": "2026-11-05",
   "/compare/string-vs-firecrawl": "2026-11-05",
+  [JINA_ALTERNATIVES_PATH]: "2026-11-09",
+  "/compare": "2026-11-09",
+  "/providers/you-com": "2026-11-09",
 };
