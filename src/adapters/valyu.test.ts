@@ -27,14 +27,14 @@ test('Valyu scrape returns the page Markdown and the reported charge', async () 
   const sent = call(request, 0);
   assert.equal(sent.target, 'https://api.valyu.ai/v1/contents');
   assert.equal(sent.headers.get('x-api-key'), 'test-only-placeholder');
-  assert.deepEqual(sent.body, { urls: [url] });
+  assert.deepEqual(sent.body, { urls: [url], max_age: 3600 });
 });
 
 test('Valyu scrape asks for high extraction effort in the tuned lane', async () => {
   const request = routes([Response.json({ success: true, total_cost_dollars: 0.00125, results: [{ url, title: 'Guide', content: '# Guide', status: 'success' }] })]);
   assert.ok(valyu.scrape);
   await valyu.scrape({ url }, ctx('tuned'));
-  assert.deepEqual(call(request, 0).body, { urls: [url], extract_effort: 'high' });
+  assert.deepEqual(call(request, 0).body, { urls: [url], max_age: 3600, extract_effort: 'high' });
 });
 
 test('Valyu scrape fails a URL that the API marks as failed', async () => {

@@ -8,6 +8,9 @@ const key = () => ({ 'x-api-key': secret('VALYU_API_KEY') });
 // by default; the reported total_deduction_dollars is the charge.
 const SEARCH_MAX_PRICE = 35;
 const MAX_RESULTS = 20;
+// Pages older than this many seconds are fetched again before the response. Without it, /contents may return a
+// cached copy up to 7 days old and refresh it in the background. One hour keeps version and release pages current.
+const MAX_AGE_SECONDS = 3600;
 // Caps the page text per search result. The default is 25,000 characters; 4,000 keeps the answer in nearly every
 // task and cuts what the agent reads by about two thirds.
 const RESPONSE_LENGTH = 4000;
@@ -24,7 +27,7 @@ const asText = (value: unknown): string => typeof value === 'string' ? value : v
 export const valyu: Adapter = {
   id: 'valyu', displayName: 'Valyu', cohort: 'content-api', apiVersion: 'v1 /contents, /search; docs 2026-11-07',
   scrape: ({ url }, ctx) => operation(ctx, async s => {
-    const d = await s.json(`${base}/contents`, contentsResponse, { headers: key(), body: { urls: [url], ...(ctx.lane === 'tuned' ? { extract_effort: 'high' } : {}) } });
+    const d = await s.json(`${base}/contents`, contentsResponse, { headers: key(), body: { urls: [url], max_age: MAX_AGE_SECONDS, ...(ctx.lane === 'tuned' ? { extract_effort: 'high' } : {}) } });
     if (typeof d.total_cost_dollars === 'number') s.reportedUsd(d.total_cost_dollars); else s.estimate(pricing.valyu.contents);
     const page = d.results?.[0];
     if (!page || page.status === 'failed') { const message = d.error ?? 'No page content'; throw new ApiError(classify(message, s.status), message, s.status); }
